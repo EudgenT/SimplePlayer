@@ -50,7 +50,7 @@ public class PlayBackService extends Service implements MediaPlayer.OnPreparedLi
                 mMediaPlayer = new MediaPlayer();
                 mMediaPlayer.setDataSource(this, getSongs());
                 mMediaPlayer.setOnPreparedListener(this);
-                mMediaPlayer.prepareAsync();
+                //mMediaPlayer.prepareAsync();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -92,13 +92,6 @@ public class PlayBackService extends Service implements MediaPlayer.OnPreparedLi
         Log.d(TAG, "onDestroy()");
     }
 
-    /*@Override
-    public boolean onUnbind(Intent intent) {
-        Toast.makeText(this, "onUnbind()", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onUnbind()");
-        return super.onUnbind(intent);
-    }*/
-
     public PlayBackService() {
     }
 
@@ -122,14 +115,34 @@ public class PlayBackService extends Service implements MediaPlayer.OnPreparedLi
                         .setSmallIcon(R.mipmap.ic_launcher)
                         .setContentTitle("My notification")
                         .setContentText("Hello World!")
+                        .setAutoCancel(true)
                         .setContentIntent(pi);
 
-        startForeground(NOTIFICATION_ID, builder.build());
+//        startForeground(NOTIFICATION_ID, builder.build());
     }
 
     public class PlayBackBinder extends Binder {
         public PlayBackService getService() {
             return PlayBackService.this;
+        }
+    }
+
+    public void playSongId(long songId) {
+        Uri contentUri = ContentUris.withAppendedId(
+                android.provider.MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                songId);
+        try {
+            if(mMediaPlayer != null && mMediaPlayer.isPlaying()){
+                mMediaPlayer.stop();
+                mMediaPlayer.release();
+                mMediaPlayer = null;
+            }
+            mMediaPlayer = new MediaPlayer();
+            mMediaPlayer.setDataSource(this, contentUri);
+            mMediaPlayer.setOnPreparedListener(this);
+            mMediaPlayer.prepareAsync();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

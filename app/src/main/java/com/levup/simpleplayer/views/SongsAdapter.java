@@ -26,6 +26,12 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHol
         notifyDataSetChanged();
     }
 
+    public void setOnItemClickListener(View.OnClickListener onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
+    }
+
+    private View.OnClickListener mOnItemClickListener;
+
     @Override
     public SongsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
@@ -37,6 +43,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHol
     public void onBindViewHolder(SongsViewHolder holder, int position) {
         final Song song = mDataSource.get(position);
         holder.bind(song);
+        holder.itemView.setOnClickListener(mOnItemClickListener);
     }
 
     @Override
