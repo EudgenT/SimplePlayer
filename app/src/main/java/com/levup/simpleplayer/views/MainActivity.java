@@ -4,16 +4,14 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.levup.simpleplayer.R;
 import com.levup.simpleplayer.models.Song;
-import com.levup.simpleplayer.presenters.SongsPresenter;
+import com.levup.simpleplayer.services.SongsPresenter;
 import com.levup.simpleplayer.services.PlayBackService;
 
 import java.util.List;
@@ -55,15 +53,6 @@ public class MainActivity extends AppCompatActivity implements SongsView {
         Intent playBackIntent = PlayBackService.newInstance(this);
         playBackIntent.setAction(PlayBackService.ACTION_PLAY);
         startService(playBackIntent);
-
-//        new Handler().postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//               stopService(PlayBackService.newInstance(MainActivity.this));
-//            }
-//        }, 10000);
-
-
     }
 
     @Override
