@@ -7,8 +7,10 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ProgressBar;
 
 import com.levup.simpleplayer.R;
@@ -21,6 +23,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity implements SongsView {
 
     public static final String TAG = MainActivity.class.getSimpleName();
+    public static final int SPAN_COUNT = 2;
 
     private SongsPresenter mPresenter = new SongsPresenter();
     private RecyclerView mRecyclerView;
@@ -84,7 +87,13 @@ public class MainActivity extends AppCompatActivity implements SongsView {
 
     @Override
     public void onAllSongsLoaded(List<Song> songList) {
-        Log.d(TAG, "" + songList.size());
+        final RecyclerView.LayoutManager manager = new GridLayoutManager(this, SPAN_COUNT);
+        final SongsAdapter adapter = new SongsAdapter();
+        mRecyclerView.setLayoutManager(manager);
+        mRecyclerView.setHasFixedSize(true);
+        adapter.setDataSource(songList);
+        mProgressBar.setVisibility(View.GONE);
+        mRecyclerView.setAdapter(adapter);
     }
 
 }
