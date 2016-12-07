@@ -7,7 +7,9 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.ProgressBar;
 
 import com.levup.simpleplayer.R;
 import com.levup.simpleplayer.models.Song;
@@ -21,6 +23,8 @@ public class MainActivity extends AppCompatActivity implements SongsView {
     public static final String TAG = MainActivity.class.getSimpleName();
 
     private SongsPresenter mPresenter = new SongsPresenter();
+    private RecyclerView mRecyclerView;
+    private ProgressBar mProgressBar;
 
     private PlayBackService mService;
     private boolean mBound = false;
@@ -28,8 +32,7 @@ public class MainActivity extends AppCompatActivity implements SongsView {
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder iBinder) {
+        public void onServiceConnected(ComponentName className, IBinder iBinder) {
             PlayBackService.PlayBackBinder binder
                     = (PlayBackService.PlayBackBinder) iBinder;
             mService = binder.getService();
@@ -47,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements SongsView {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycleView);
+        mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         mPresenter.onAttachToView(this);
         mPresenter.loadAllSongs();
 
