@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.levup.simpleplayer.R;
 import com.levup.simpleplayer.models.Song;
-import com.levup.simpleplayer.presenters.SongRepository;
+import com.levup.simpleplayer.presenters.SongsRepository;
 
 import java.util.List;
 
@@ -68,9 +68,9 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongsViewHol
 
         public void bind(@NonNull Song song) {
             mSong = song;
-            mArtistTextView.setText(song.title);
-            mTitleTextView.setText(song.artistName);
-            String cover = SongRepository.getAlbumCover(itemView.getContext(), song.albumId);
+            mArtistTextView.setText(song.artistName);
+            mTitleTextView.setText(song.title);
+            String cover = SongsRepository.getAlbumCover(itemView.getContext(), song.albumId);
             Glide
                 .with(itemView.getContext())
                 .load(cover)
