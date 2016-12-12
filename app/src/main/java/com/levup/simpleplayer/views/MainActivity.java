@@ -32,6 +32,10 @@ public class MainActivity extends AppCompatActivity implements SongsView {
     private PlayBackService mService;
     private boolean mBound = false;
 
+    public static Intent newIntent(Context context){
+        return new Intent(context, MainActivity.class);
+    }
+
     private ServiceConnection mConnection = new ServiceConnection() {
 
         @Override
