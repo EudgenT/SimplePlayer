@@ -1,9 +1,11 @@
 package com.levup.simpleplayer.views;
 
+import android.animation.ObjectAnimator;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,8 +13,11 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ProgressBar;
 
+import com.example.eudge_000.library.view.SwipeItemView;
 import com.levup.simpleplayer.R;
 import com.levup.simpleplayer.models.Song;
 import com.levup.simpleplayer.services.SongsPresenter;
@@ -21,6 +26,8 @@ import com.levup.simpleplayer.services.PlayBackService;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements SongsView {
+
+    public SwipeItemView itemView = new SwipeItemView(this);
 
     public static final String TAG = MainActivity.class.getSimpleName();
     public static final int SPAN_COUNT = 2;
@@ -59,6 +66,17 @@ public class MainActivity extends AppCompatActivity implements SongsView {
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycleView);
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+
+//Animation
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ObjectAnimator animator = ObjectAnimator.ofFloat(mProgressBar, View.TRANSLATION_Y, -2000, 0);
+                animator.setDuration(4000);
+                animator.start();
+            }
+        }, 3000);
+
         mPresenter.onAttachToView(this);
         mPresenter.loadAllSongs();
 

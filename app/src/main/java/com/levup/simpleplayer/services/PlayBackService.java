@@ -34,12 +34,10 @@ public class PlayBackService extends Service implements MediaPlayer.OnPreparedLi
         return new Intent(context, PlayBackService.class);
     }
 
-    @Override
+/*    @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "onCreate()");
-        Toast.makeText(this, "onCreate()", Toast.LENGTH_SHORT).show();
-    }
+    }*/
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -84,13 +82,10 @@ public class PlayBackService extends Service implements MediaPlayer.OnPreparedLi
         return null;
     }
 
-    @Override
+/*    @Override
     public void onDestroy() {
         super.onDestroy();
-
-        Toast.makeText(this, "onDestroy()", Toast.LENGTH_SHORT).show();
-        Log.d(TAG, "onDestroy()");
-    }
+    }*/
 
     public PlayBackService() {
     }
