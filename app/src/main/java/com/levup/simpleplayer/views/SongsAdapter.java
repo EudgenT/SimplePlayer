@@ -24,7 +24,7 @@ import java.util.List;
 
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHolder> {
 
-    private List<Song> mDataSource = null;
+     private List<Song> mDataSource = null;
 
     private View.OnClickListener mOnItemClickListener;
 
@@ -35,6 +35,10 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
     public void setDataSource(List<Song> dataSource) {
         mDataSource = dataSource;
         notifyDataSetChanged();
+    }
+
+    public List<Song> getDataSource (){
+        return mDataSource;
     }
 
     @Override

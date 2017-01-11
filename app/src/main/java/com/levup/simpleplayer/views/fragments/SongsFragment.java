@@ -3,10 +3,12 @@ package com.levup.simpleplayer.views.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import com.levup.simpleplayer.R;
 import com.levup.simpleplayer.models.Song;
 import com.levup.simpleplayer.presenters.SongsPresenter;
+import com.levup.simpleplayer.views.MenuActivity;
 import com.levup.simpleplayer.views.MusicActivity;
 import com.levup.simpleplayer.views.MusicActivity.PlayBackInteraction;
 import com.levup.simpleplayer.views.SongsAdapter;
@@ -21,15 +24,13 @@ import com.levup.simpleplayer.views.SongsView;
 
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- *
- * @author fddfdf
- *
- */
+import rx.Observable;
+
 public class SongsFragment extends Fragment implements SongsView {
 
     private PlayBackInteraction mPlayBackInteraction;
+
+    private Observable<Song> mSongsObservable = null;
 
     private static final int SPAN_COUNT = 2;
 
@@ -68,6 +69,24 @@ public class SongsFragment extends Fragment implements SongsView {
                 SPAN_COUNT);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
+
+//        Log.d("TAG", ""+getActivity().getClass().getSimpleName());
+
+        new Handler().postDelayed(() -> {
+
+//            Log.d("TAG", ""+getActivity().getClass().getSimpleName());
+
+            if(getActivity() instanceof MenuActivity){
+                MenuActivity menuActivity = (MenuActivity)getActivity();
+//                Log.d("TAG", ""+menuActivity.getQueryObservable());
+
+                menuActivity.getQueryObservable()
+                        .doOnNext(query -> Log.d("TAG", query.toString()))
+                        .flatMap(query -> mSongsObservable.filter(song -> song.title.contains(query) ))
+                        .toList()
+                        .subscribe(songList -> {mSongsAdapter.setDataSource(songList);});
+            }
+        }, 2000);
     }
 
     @Override
@@ -90,6 +109,7 @@ public class SongsFragment extends Fragment implements SongsView {
 
         });
         mRecyclerView.setAdapter(mSongsAdapter);
+        mSongsObservable = Observable.from(songList);
     }
 
     @Override
