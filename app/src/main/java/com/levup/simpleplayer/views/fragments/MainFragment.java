@@ -1,29 +1,44 @@
 package com.levup.simpleplayer.views.fragments;
 
+
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.levup.simpleplayer.R;
 import com.levup.simpleplayer.views.MenuInteractionListener;
+import com.levup.simpleplayer.views.MusicActivity;
+import com.levup.simpleplayer.views.MusicActivity.PlayBackInteraction;
 
-import org.w3c.dom.Text;
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * A simple {@link Fragment} subclass.
+ */
 public class MainFragment extends Fragment {
 
     private MenuInteractionListener mListener = null;
 
+    private PlayBackInteraction mPlayBackInteraction;
+
     public static final String SOME_VALUE = "SOME_VALUE";
 
-    public static MainFragment newInstance(int value) {
+    private ViewPager viewPager;
 
+    private ImageView mPlayPauseButton;
+
+    public static MainFragment newInstance(int value) {
         Bundle args = new Bundle();
         args.putInt(SOME_VALUE, value);
         MainFragment fragment = new MainFragment();
@@ -34,29 +49,58 @@ public class MainFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        if(activity instanceof MenuInteractionListener){
+        if(activity instanceof MenuInteractionListener) {
             mListener = (MenuInteractionListener) activity;
+        }
+        initPlayBackInteraction();
+    }
+
+    private void initPlayBackInteraction() {
+        if(getActivity() instanceof MusicActivity) {
+            mPlayBackInteraction = ((MusicActivity) getActivity())
+                    .getPlayBackInteraction();
         }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        final View view = inflater.inflate(R.layout.fragment_main, container, false);
+        mPlayPauseButton = (ImageView) view.findViewById(R.id.btnPlay);
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.btn).setOnClickListener(btnView -> {
-            mListener.onMainFragmentEventListener(getArguments().getInt(SOME_VALUE));
+
+        viewPager = (ViewPager) view.findViewById(R.id.pager);
+        if (viewPager != null) {
+            setupViewPager(viewPager);
+            viewPager.setOffscreenPageLimit(2);
+        }
+
+        mPlayPauseButton.setOnClickListener(iv -> {
+            if(mPlayBackInteraction == null) {
+                initPlayBackInteraction();
+            }
+            if(mPlayBackInteraction != null) {
+                if(mPlayBackInteraction.isPaused()) {
+                    mPlayBackInteraction.play();
+                } else {
+                    mPlayBackInteraction.pause();
+                }
+            }
         });
+
     }
 
-    public void showText(CharSequence text){
-        if(getView() == null) return;
-        final TextView textView = (TextView) getView().findViewById(R.id.textView);
-        textView.setText(text);
+    private void setupViewPager(ViewPager viewPager) {
+        Adapter adapter = new Adapter(getChildFragmentManager());
+        adapter.addFragment(new SongsFragment(), this.getString(R.string.songs));
+        adapter.addFragment(new AlbumFragment(), this.getString(R.string.albums));
+        adapter.addFragment(new ArtistFragment(), this.getString(R.string.artists));
+        viewPager.setAdapter(adapter);
     }
 
     @Override
@@ -64,4 +108,34 @@ public class MainFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+    static class Adapter extends FragmentPagerAdapter {
+        private final List<Fragment> mFragments = new ArrayList<>();
+        private final List<String> mFragmentTitles = new ArrayList<>();
+
+        public Adapter(FragmentManager fm) {
+            super(fm);
+        }
+
+        public void addFragment(Fragment fragment, String title) {
+            mFragments.add(fragment);
+            mFragmentTitles.add(title);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return mFragments.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return mFragments.size();
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return mFragmentTitles.get(position);
+        }
+    }
 }
+

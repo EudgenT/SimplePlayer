@@ -21,14 +21,13 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.levup.simpleplayer.R;
-import com.levup.simpleplayer.views.fragments.GalleryFragment;
-import com.levup.simpleplayer.views.fragments.ImportFragment;
+import com.levup.simpleplayer.views.base.BaseActivity;
 import com.levup.simpleplayer.views.fragments.MainFragment;
-import com.levup.simpleplayer.views.fragments.PlayListsFragment;
+import com.levup.simpleplayer.views.fragments.PlaylistsFragment;
 
-public class MenuActivity extends AppCompatActivity
+public class MenuActivity extends MusicActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        MenuInteractionListener{
+        MenuInteractionListener {
 
     public static Intent newIntent(Context context) {
         return new Intent(context, MenuActivity.class);
@@ -41,11 +40,8 @@ public class MenuActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        addFragment(MainFragment.newInstance(3));
 
-        new Handler().postDelayed(() -> {
-            addFragment(MainFragment.newInstance(2));
-        }, 10000);
+        addFragment(MainFragment.newInstance(3));
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -74,22 +70,6 @@ public class MenuActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-    }
-
-    private void replaceFragment(Fragment fragment) {
-        FragmentManager manager = getSupportFragmentManager();
-        manager
-                .beginTransaction()
-                .replace(R.id.content_menu, fragment)
-                .commitAllowingStateLoss();
-    }
-
-    private void addFragment(Fragment fragment) {
-        FragmentManager manager = getSupportFragmentManager();
-        manager.beginTransaction()
-                .add(R.id.content_menu, fragment)
-                .addToBackStack(null)
-                .commitAllowingStateLoss();
     }
 
     @Override
@@ -123,12 +103,9 @@ public class MenuActivity extends AppCompatActivity
         if (id == R.id.nav_camera) {
             replaceFragment(MainFragment.newInstance(5));
         } else if (id == R.id.nav_gallery) {
-            replaceFragment(PlayListsFragment.newInstance());
+            replaceFragment(PlaylistsFragment.newInstance());
         } else if (id == R.id.nav_slideshow) {
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_menu);
-            if(fragment instanceof MainFragment){
-                ((MainFragment) fragment).showText("sLideshow");
-            }
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {

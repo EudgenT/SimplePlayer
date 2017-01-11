@@ -2,11 +2,11 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/item_main_song_height"
-    app:cardCornerRadius="4dp"
+    app:cardElevation="4dp"
     app:contentPadding="8dp"
-    app:cardElevation="4dp">
+    app:cardCornerRadius="4dp"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/item_main_song_height">
 
     <LinearLayout
         android:orientation="vertical"

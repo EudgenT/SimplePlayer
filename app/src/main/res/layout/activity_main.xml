@@ -5,16 +5,17 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.levup.simpleplayer.views.MainActivity">
+    tools:context="com.levup.simpleplayer.views.MusicActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycleView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
     <ProgressBar
-        android:id="@+id/progress_bar"
         android:layout_gravity="center"
+        android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
 </FrameLayout>
