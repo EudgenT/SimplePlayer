@@ -4,6 +4,7 @@ package com.levup.simpleplayer.views.fragments;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.levup.simpleplayer.R;
@@ -37,6 +39,8 @@ public class MainFragment extends Fragment {
     private ViewPager viewPager;
 
     private ImageView mPlayPauseButton;
+
+    private SeekBar mSeekBar = null;
 
     public static MainFragment newInstance(int value) {
         Bundle args = new Bundle();
@@ -67,12 +71,35 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_main, container, false);
         mPlayPauseButton = (ImageView) view.findViewById(R.id.btnPlay);
+        mSeekBar = (SeekBar) view.findViewById(R.id.sb);
         return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int position, boolean fromUser) {
+                if(fromUser) {
+                    if(mPlayBackInteraction != null) {
+                        mPlayBackInteraction.onUserSeek(position);
+                    }
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         viewPager = (ViewPager) view.findViewById(R.id.pager);
         if (viewPager != null) {
@@ -87,17 +114,19 @@ public class MainFragment extends Fragment {
             if(mPlayBackInteraction != null) {
                 if(mPlayBackInteraction.isPaused()) {
                     mPlayBackInteraction.play();
+                    mPlayBackInteraction
+                            .gerDurationObservable()
+                            .subscribe(position -> { mSeekBar.setProgress(position); });
                 } else {
                     mPlayBackInteraction.pause();
                 }
             }
         });
-
     }
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getChildFragmentManager());
-        adapter.addFragment(new SongsFragment(), this.getString(R.string.songs));
+        adapter.addFragment(new SongsFragment(), this.getString(R.string.songRealmList));
         adapter.addFragment(new AlbumFragment(), this.getString(R.string.albums));
         adapter.addFragment(new ArtistFragment(), this.getString(R.string.artists));
         viewPager.setAdapter(adapter);

@@ -8,15 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.SearchView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -24,16 +21,22 @@ import android.widget.Toast;
 
 import com.jakewharton.rxbinding.support.v7.widget.RxSearchView;
 import com.levup.simpleplayer.R;
-import com.levup.simpleplayer.views.base.BaseActivity;
 import com.levup.simpleplayer.views.fragments.MainFragment;
-import com.levup.simpleplayer.views.fragments.PlaylistsFragment;
+import com.levup.simpleplayer.views.fragments.PlayListsFragment;
 
 import rx.Observable;
-import rx.functions.Func1;
+
 
 public class MenuActivity extends MusicActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         MenuInteractionListener {
+
+    private Observable<CharSequence> queryObservable = null;
+
+    @Nullable
+    public Observable<CharSequence> getQueryObservable() {
+        return queryObservable;
+    }
 
     public static Intent newIntent(Context context) {
         return new Intent(context, MenuActivity.class);
@@ -45,7 +48,6 @@ public class MenuActivity extends MusicActivity
         setContentView(R.layout.activity_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
 
         addFragment(MainFragment.newInstance(3));
 
@@ -78,13 +80,6 @@ public class MenuActivity extends MusicActivity
         }
     }
 
-    private Observable<CharSequence> queryObservable = null;
-
-    @Nullable
-    public Observable<CharSequence> getQueryObservable() {
-        return queryObservable;
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
@@ -107,9 +102,7 @@ public class MenuActivity extends MusicActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-    /*    if (id == R.id.action_settings) {
-            return true;
-        }*/
+
 
         return super.onOptionsItemSelected(item);
     }
@@ -123,7 +116,7 @@ public class MenuActivity extends MusicActivity
         if (id == R.id.nav_camera) {
             replaceFragment(MainFragment.newInstance(5));
         } else if (id == R.id.nav_gallery) {
-            replaceFragment(PlaylistsFragment.newInstance());
+            replaceFragment(PlayListsFragment.newInstance());
         } else if (id == R.id.nav_slideshow) {
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.content_menu);
         } else if (id == R.id.nav_manage) {

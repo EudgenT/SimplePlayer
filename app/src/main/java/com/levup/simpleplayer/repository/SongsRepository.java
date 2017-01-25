@@ -1,4 +1,4 @@
-package com.levup.simpleplayer.presenters;
+package com.levup.simpleplayer.repository;
 
 import android.content.ContentResolver;
 import android.content.Context;
