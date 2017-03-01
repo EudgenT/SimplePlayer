@@ -18,22 +18,23 @@ import com.levup.simpleplayer.repository.SongsRepository;
 
 import java.util.List;
 
-/**
- * Created by java on 07.12.2016.
- */
-
 public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHolder> {
 
     private List<Song> mDataSource = null;
 
     private View.OnClickListener mOnItemClickListener;
 
+    public void setOnLongClickListener(View.OnLongClickListener mOnLongClickListener) {
+        this.mOnLongClickListener = mOnLongClickListener;
+    }
+
+    private View.OnLongClickListener mOnLongClickListener;
+
     public void setOnItemClickListener(View.OnClickListener onClickListener) {
         mOnItemClickListener = onClickListener;
     }
 
     public void setDataSource(List<Song> dataSource) {
-        Log.d("TAG", "ffffffffffffffffffff" + dataSource.size());
         mDataSource = dataSource;
         notifyDataSetChanged();
     }
@@ -54,6 +55,7 @@ public class SongsAdapter extends RecyclerView.Adapter<SongsAdapter.SongViewHold
         final Song song = mDataSource.get(position);
         holder.bind(song);
         holder.itemView.setOnClickListener(mOnItemClickListener);
+        holder.itemView.setOnLongClickListener(mOnLongClickListener);
     }
 
     @Override

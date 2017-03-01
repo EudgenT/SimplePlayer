@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,7 @@ public class SongsFragment extends Fragment implements SongsView {
 
     private PlayBackInteraction mPlayBackInteraction;
 
-    private static final int SPAN_COUNT = 2;
+//    private static final int SPAN_COUNT = 2;
 
     private SongsPresenter mPresenter = new SongsPresenter();
 
@@ -69,9 +70,8 @@ public class SongsFragment extends Fragment implements SongsView {
         mPresenter.onAttachToView(this);
         mPresenter.loadAllSongs();
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
-        final RecyclerView.LayoutManager manager = new GridLayoutManager(
-                getActivity(),
-                SPAN_COUNT);
+        final RecyclerView.LayoutManager manager = new LinearLayoutManager(
+                getActivity());
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setHasFixedSize(true);
 
